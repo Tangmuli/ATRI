@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATRI - 日语文字叠加效果</title>
+    <style>
+        :root {
+            --primary-color: #0a6cf1;
+            --secondary-color: #d6eaff;
+            --accent-color: #ff5c93;
+            --text-color: #263238;
+            --light-text: #546e7a;
+            --background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --glow: 0 0 15px rgba(10, 108, 241, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--background);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 0;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* 导航栏样式 */
+        nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* 英雄区域 */
+        .hero-section {
+            margin-top: 100px;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 核心：日语图片叠加区域 - 放置在界面中上部分 */
+        .japanese-text-container {
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 900px;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .japanese-text-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(10, 108, 241, 0.05), rgba(255, 92, 147, 0.05));
+            z-index: 0;
+        }
+        
+        /* 图片叠加容器 - 核心实现 */
+        .image-overlay-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            width: 100%;
+        }
+        
+        /* 图片组容器 - 使用flex布局实现水平排列 */
+        .image-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1px; /* 极小的间距，让图片几乎紧贴在一起 */
+            position: relative;
+        }
+        
+        /* 单个图片样式 */
+        .japanese-image {
+            max-height: 200px;
+            object-fit: contain;
+            background: white;
+            padding: 2px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 图片悬停效果 */
+        .japanese-image:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+        
+        /* 图片加载状态 */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border-radius: 20px;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--secondary-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 信息展示区域 */
+        .info-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 900px;
+            box-shadow: var(--shadow);
+        }
+        
+        .info-title {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+        
+        .info-content {
+            color: var(--light-text);
+            line-height: 1.8;
+        }
+        
+        .result-box {
+            background: #f8f9fa;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .japanese-result {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        
+        .translation {
+            color: var(--light-text);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        /* 实现说明 */
+        .implementation-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto 4rem;
+            max-width: 900px;
+            box-shadow: var(--shadow);
+        }
+        
+        .implementation-title {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+        
+        .implementation-content {
+            color: var(--light-text);
+            line-height: 1.8;
+        }
+        
+        .implementation-content h4 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .code-block {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .japanese-text-container {
+                padding: 1rem;
+                min-height: 200px;
+            }
+            
+            .japanese-image {
+                max-height: 120px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .japanese-result {
+                font-size: 1.4rem;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                ATRI - 日语文字效果
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">首页</a></li>
+                <li><a href="#info">句子信息</a></li>
+                <li><a href="#implementation">实现说明</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 英雄区域 -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">ATRI - 日语文字叠加展示</h1>
+        </div>
+    </section>
+    
+    <!-- 核心：日语图片叠加区域 -->
+    <section class="container">
+        <div class="japanese-text-container fade-in-up">
+            <!-- 加载状态覆盖层 -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner"></div>
+            </div>
+            
+            <!-- 图片叠加容器 -->
+            <div class="image-overlay-container">
+                <div class="image-group" id="imageGroup">
+                    <!-- JavaScript将在这里动态加载STORY目录下的图片 -->
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 信息展示区域 -->
+    <section id="info" class="container">
+        <div class="info-section fade-in-up">
+            <h2 class="info-title">日语句子信息</h2>
+            <div class="info-content">
+                <div class="result-box">
+                    <div class="japanese-result" id="japaneseResult">
+                        <!-- 加载完成后显示完整日语句子 -->
+                    </div>
+                    <div class="translation" id="translation">
+                        <!-- 加载完成后显示中文翻译 -->
+                    </div>
+                </div>
+                
+                <p>上面展示的是通过STORY目录下的图片叠加形成的完整日语句子。每张图片包含一个或多个日语字符，当它们按照顺序紧密排列时，就形成了一句完整的日语。</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 实现说明 -->
+    <section id="implementation" class="container">
+        <div class="implementation-section fade-in-up">
+            <h2 class="implementation-title">实现原理</h2>
+            <div class="implementation-content">
+                <h4>核心实现方式</h4>
+                <p>这个日语文字叠加效果通过以下方式实现：</p>
+                
+                <h4>1. 图片排列技术</h4>
+                <div class="code-block">
+.image-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1px; /* 极小间距，让图片几乎紧贴 */
+}</div>
+                
+                <h4>2. 图片样式设置</h4>
+                <div class="code-block">
+.japanese-image {
+    max-height: 200px;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}</div>
+                
+                <h4>3. 交互效果</h4>
+                <p>每张图片都有悬停效果，当鼠标悬停在某个字符上时，该字符会轻微放大并提升阴影，增强用户体验。</p>
+                
+                <h4>4. 动态加载</h4>
+                <p>使用JavaScript动态加载STORY目录下的所有图片，并按照文件名顺序排列，确保形成正确的日语句子。</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <p>© 2025 ATRI - 日语文字叠加效果展示</p>
+        </div>
+    </footer>
+    
+    <script>
+        // STORY目录下的图片文件列表（按顺序）
+        const imageFiles = [
+            'DM_20250830223814_001.png',
+            'DM_20250830223816_001.png',
+            'DM_20250830223818_001.png',
+            'DM_20250830223819_001.png',
+            'DM_20250830223821_001.png',
+            'DM_20250830223823_001.png',
+            'DM_20250830223826_001.png',
+            'DM_20250830223828_001.png',
+            'DM_20250830223829_001.png',
+            'DM_20250830223831_001.png',
+            'DM_20250830223833_001.png',
+            'DM_20250830223834_001.png',
+            'DM_20250830223856_001.png',
+            'DM_20250830223859_001.png',
+            'DM_20250830223902_001.png'
+        ];
+        
+        // 图片基础路径
+        const basePath = '素材/STORY___アニメ「ATRI-My_Dear_Moments-」公式サイト/';
+        
+        // 模拟的日语句子和翻译（实际句子需要根据图片内容确定）
+        // 这里使用ATRI的经典台词作为示例
+        const fullJapaneseSentence = "「私はアトリ、高性能です」";
+        const chineseTranslation = "「我是亚托莉，高性能机器人」";
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageGroup = document.getElementById('imageGroup');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const japaneseResult = document.getElementById('japaneseResult');
+            const translation = document.getElementById('translation');
+            
+            // 计数器，用于跟踪图片加载状态
+            let loadedImages = 0;
+            let imageElements = [];
+            
+            // 遍历所有图片文件
+            imageFiles.forEach((fileName, index) => {
+                // 创建图片元素
+                const img = document.createElement('img');
+                img.src = basePath + fileName;
+                img.alt = `日语文字 ${index + 1}`;
+                img.className = 'japanese-image';
+                
+                // 存储图片元素
+                imageElements.push(img);
+                
+                // 设置图片加载完成事件
+                img.onload = function() {
+                    loadedImages++;
+                    
+                    // 所有图片加载完成后
+                    if (loadedImages === imageFiles.length) {
+                        // 添加所有图片到DOM
+                        imageElements.forEach(element => {
+                            imageGroup.appendChild(element);
+                        });
+                        
+                        // 隐藏加载覆盖层
+                        loadingOverlay.style.display = 'none';
+                        
+                        // 显示日语句子和翻译
+                        japaneseResult.textContent = fullJapaneseSentence;
+                        translation.textContent = chineseTranslation;
+                    }
+                };
+                
+                // 图片加载失败处理
+                img.onerror = function() {
+                    console.error(`图片加载失败: ${fileName}`);
+                    loadedImages++;
+                    
+                    // 即使部分图片加载失败，也继续处理
+                    if (loadedImages === imageFiles.length) {
+                        // 添加已加载的图片到DOM
+                        imageElements.forEach(element => {
+                            imageGroup.appendChild(element);
+                        });
+                        
+                        // 隐藏加载覆盖层
+                        loadingOverlay.style.display = 'none';
+                        
+                        // 显示日语句子和翻译
+                        japaneseResult.textContent = fullJapaneseSentence;
+                        translation.textContent = chineseTranslation;
+                    }
+                };
+            });
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.style.padding = '0.5rem 0';
+                navbar.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.padding = '1rem 0';
+                navbar.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+            }
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

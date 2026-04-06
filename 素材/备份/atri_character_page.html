@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アニメ「ATRI-My_Dear_Moments-」公式サイト</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 引入自定义字体 */
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('H4clBXOCl9bbnla_nHIq75u9.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* 为导航栏文字强制应用自定义字体 */
+        #navbar * {
+            font-family: 'CustomFont' !important;
+        }
+        
+        :root {
+            --primary-color: #0a6cf1;
+            --secondary-color: #d6eaff;
+            --accent-color: #ff5c93;
+            --text-color: #263238;
+            --light-text: #546e7a;
+            --background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --glow: 0 0 15px rgba(10, 108, 241, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* 背景视频容器 */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: -2;
+        }
+        
+        body {
+            background-color: #f0f0f0;
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 0;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            z-index: -1;
+        }
+        
+        /* 擦玻璃效果样式 */
+        .canvas-bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .canvas-bg-image > div {
+            background: url('https://source.unsplash.com/random/1920x1080/?anime,water');
+            background-size: cover;
+            height: 100%;
+            width: 100%;
+            filter: blur(8px) brightness(0.8);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* 导航栏样式 */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-family: 'CustomFont', 'Arial', sans-serif;
+        }
+        
+        nav.scrolled {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 与示例图完全匹配的导航栏样式 */
+        #navbar {
+    background-image: linear-gradient(to right top, #7bd2fa, #71c5f2, #68b8e9, #60abe0, #5a9ed7);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    font-family: 'CustomFont', 'Arial', sans-serif;
+}
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-logo img {
+            width: 120px;
+            height: auto;
+            margin-right: 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+        }
+        
+        .nav-links li {
+            position: relative;
+            background: transparent;
+        }
+        
+        .nav-links li:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-links a {
+    text-decoration: none;
+    background: white;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding: 0.8rem 1.2rem;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-align: center;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: 'CustomFont' !important;
+    letter-spacing: 0.5px;
+}
+        
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .nav-logo img {
+                width: 100px;
+            }
+            
+            .nav-links a {
+                padding: 0.8rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .nav-container {
+                padding: 0.5rem 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0.5rem 0.8rem;
+            }
+            
+            .nav-logo img {
+                width: 90px;
+            }
+        }
+        
+        /* 确保导航栏在滚动时保持样式一致 */
+        #navbar.scrolled {
+    background-image: linear-gradient(to right top, #7bd2fa, #71c5f2, #68b8e9, #60abe0, #5a9ed7);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+        
+        .mobile-menu-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.3rem 0.8rem;
+            display: none;
+            transition: all 0.2s ease;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 英雄区域 */
+        .hero-section {
+            margin-top: 100px;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--light-text);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(10, 108, 241, 0.3);
+            border: 2px solid transparent;
+        }
+        
+        .btn:hover {
+            background: white;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(10, 108, 241, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* 主要卡片 */
+        .atri-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow), var(--glow);
+            overflow: hidden;
+            margin: 0 auto 5rem;
+            max-width: 1100px;
+            border: 1px solid rgba(10, 108, 241, 0.3);
+        }
+        
+        .character-image {
+            position: relative;
+            width: 100%;
+            max-height: 600px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #d6eaff, #f0f7ff);
+        }
+        
+        .character-image img {
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            object-fit: contain;
+            display: block;
+        }
+        
+        /* 首次访问动画样式 */
+        .hero-animated {
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        /* 角色卡片首次加载动画 */
+        .atri-card {
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .atri-card.loaded {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .character-image {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s;
+        }
+        
+        .character-image.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .character-info {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease-out 0.2s, transform 0.7s ease-out 0.2s;
+        }
+        
+        .character-info.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 信息区块依次出现动画 */
+        .info-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        .info-section.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .info-section:nth-child(1).loaded { transition-delay: 0.3s; }
+        .info-section:nth-child(2).loaded { transition-delay: 0.4s; }
+        .info-section:nth-child(3).loaded { transition-delay: 0.5s; }
+        .info-section:nth-child(4).loaded { transition-delay: 0.6s; }
+        .info-section:nth-child(5).loaded { transition-delay: 0.7s; }
+        
+        /* 性格标签渐入动画 */
+        .personality-tags .tag {
+            opacity: 0;
+            transform: translateY(10px) scale(0.9);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+        
+        .personality-tags .tag.loaded {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .personality-tags .tag:nth-child(1).loaded { transition-delay: 0.5s; }
+        .personality-tags .tag:nth-child(2).loaded { transition-delay: 0.55s; }
+        .personality-tags .tag:nth-child(3).loaded { transition-delay: 0.6s; }
+        .personality-tags .tag:nth-child(4).loaded { transition-delay: 0.65s; }
+        .personality-tags .tag:nth-child(5).loaded { transition-delay: 0.7s; }
+        .personality-tags .tag:nth-child(6).loaded { transition-delay: 0.75s; }
+        
+        /* 能力卡片渐入动画 */
+        .ability-card {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+
+        
+        .ability-card.loaded {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .ability-card:nth-child(1).loaded { transition-delay: 0.6s; }
+        .ability-card:nth-child(2).loaded { transition-delay: 0.65s; }
+        .ability-card:nth-child(3).loaded { transition-delay: 0.7s; }
+        .ability-card:nth-child(4).loaded { transition-delay: 0.75s; }
+        
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 2rem;
+        }
+        
+        .character-info {
+            padding: 3rem;
+        }
+        
+        .info-section {
+            margin-bottom: 3rem;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--secondary-color);
+            display: inline-block;
+            font-size: 1.8rem;
+        }
+        
+        /* 性格标签 */
+        .personality-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .tag {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tag:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(10, 108, 241, 0.3);
+        }
+        
+        .tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .tag:hover::before {
+            left: 100%;
+        }
+        
+        /* 能力卡片 */
+        .abilities {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .ability-card {
+            background: var(--secondary-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: float 4s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(10, 108, 241, 0.2);
+        }
+        
+        .ability-card:nth-child(1) { animation-delay: 0s; }
+        .ability-card:nth-child(2) { animation-delay: 1s; }
+        .ability-card:nth-child(3) { animation-delay: 0.5s; }
+        .ability-card:nth-child(4) { animation-delay: 1.5s; }
+        
+        .ability-card:hover {
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(10, 108, 241, 0.2);
+        }
+        
+        .ability-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+        
+        .ability-title::before {
+            content: '✦';
+            margin-right: 0.8rem;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+        
+        /* 引用部分 */
+        .quote-section {
+            background: rgba(26, 115, 232, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 2rem;
+            border-radius: 0 15px 15px 0;
+            margin-top: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quote-section::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 150px;
+            color: rgba(10, 108, 241, 0.05);
+            font-family: Georgia, serif;
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .quote-author {
+            text-align: right;
+            color: var(--light-text);
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 数据碎片 */
+        .data-fragments {
+            margin-top: 3rem;
+            background: rgba(255, 64, 129, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .data-fragments::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .fragment {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: var(--light-text);
+            font-family: 'Courier New', monospace;
+            position: relative;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .fragment:hover {
+            opacity: 1;
+            transform: translateX(5px);
+            border-color: var(--primary-color);
+        }
+        
+        .fragment:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* 角色画廊 */
+        .gallery-section {
+            margin: 5rem 0;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .gallery-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            aspect-ratio: 3/5;
+            min-height: 350px;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: transparent;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        /* 故事部分 */
+        .story-section {
+            margin: 5rem 0;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .story-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+        }
+        
+        .story-timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .story-timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 2px;
+        }
+        
+        .story-item {
+            padding: 1rem 2rem;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .story-item:nth-child(odd) {
+            left: 0;
+            animation-delay: 0.1s;
+        }
+        
+        .story-item:nth-child(even) {
+            left: 50%;
+            animation-delay: 0.2s;
+        }
+        
+        .story-item:nth-child(3) { animation-delay: 0.3s; }
+        .story-item:nth-child(4) { animation-delay: 0.4s; }
+        
+        .story-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid var(--primary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .story-item:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .story-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        .story-content {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .story-content:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .story-image {
+            width: 100%;
+            height: 220px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+        }
+        
+        .story-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+        
+        .story-content:hover .story-image img {
+            transform: scale(1.1);
+        }
+        
+        .story-text {
+            font-size: 0.95rem;
+            color: var(--light-text);
+        }
+        
+        /* 特殊效果部分 */
+        .special-section {
+            margin: 5rem 0;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .special-title {
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+        }
+        
+        .special-items {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .special-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            max-width: 200px;
+            transition: transform 0.3s ease;
+        }
+        
+        .special-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .special-icon {
+            width: 120px;
+            height: 120px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(10, 108, 241, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .special-item:hover .special-icon {
+            background: var(--primary-color);
+            box-shadow: 0 15px 40px rgba(10, 108, 241, 0.3);
+        }
+        
+        .special-icon img {
+            width: 60px;
+            height: 60px;
+            transition: filter 0.3s ease;
+        }
+        
+        .special-item:hover .special-icon img {
+            filter: brightness(0) invert(1);
+        }
+        
+        .special-text {
+            font-size: 1rem;
+            color: var(--light-text);
+            text-align: center;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-text {
+            color: var(--light-text);
+            margin-bottom: 2rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(10, 108, 241, 0.3);
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: var(--shadow), var(--glow); }
+            50% { box-shadow: var(--shadow), 0 0 25px rgba(10, 108, 241, 0.7); }
+            100% { box-shadow: var(--shadow), var(--glow); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .story-timeline::after {
+                left: 31px;
+            }
+            
+            .story-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .story-item:nth-child(even) {
+                left: 0%;
+            }
+            
+            .story-item:nth-child(odd)::after,
+            .story-item:nth-child(even)::after {
+                left: 21px;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.95);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .character-info {
+                padding: 2rem;
+            }
+            
+            .abilities {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .special-items {
+                gap: 2rem;
+            }
+            
+            .special-item {
+                max-width: 150px;
+            }
+            
+            .special-icon {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .special-icon img {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .character-image {
+                max-height: 300px;
+            }
+            
+            .character-info {
+                padding: 1.5rem;
+            }
+            
+            .gallery-item {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 擦玻璃效果容器 -->
+    <div class="canvas-bg-image">
+        <div></div>
+    </div>
+        <!-- 背景视频 -->
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="素材/CHARACTER___アニメ「ATRI-My_Dear_Moments-」公式サイト/【ATRI高清动态壁纸】亚托莉(萝卜子)高清动态壁纸(1080P).mp4" type="video/mp4">
+        </video>
+        
+        <!-- 导航栏 -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="素材/アニメ「ATRI-My_Dear_Moments-」公式サイト/logo_w.png" alt="ATRI Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#top">Top</a></li>
+                <li><a href="#news">News</a></li>
+                <li><a href="#onair">OnAir</a></li>
+                <li><a href="#story">Story</a></li>
+                <li><a href="#staff">Staff&Cast</a></li>
+                <li><a href="#character">Character</a></li>
+                <li><a href="#music">Music</a></li>
+                <li><a href="#movie">Movie</a></li>
+                <li><a href="#blu-ray">Blu-ray&DVD</a></li>
+                <li><a href="#special">Special</a></li>
+            </ul>
+            <button class="mobile-menu-btn">×</button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- 英雄区域 -->
+        <section class="hero-section" id="about">
+            <div class="hero-content">
+                <h1 class="hero-title">ATRI - My Dear Moments</h1>
+                <p class="hero-subtitle">搭载情感模拟模块的深海探测机器人，她的醒来昭示着-----</p>
+                <div class="btn-group">
+                    <a href="#gallery" class="btn">探索画廊~</a>
+                    <a href="#story" class="btn btn-outline">了解故事</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 主要角色卡片 -->
+        <div class="atri-card">
+            <div class="character-image">
+                <img src="素材/アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250607175454_001.jpg" alt="ATRI - 高性能少女仿生智能机器人">
+                <div class="image-overlay">
+                    <p>深海的少女,她的醒来昭示着?-----</p>
+                </div>
+            </div>
+            
+            <div class="character-info">
+                <div class="info-section">
+                    <h2>基本信息</h2>
+                    <p><strong>型号：</strong>ATRI (亚托莉)</p>
+                    <p><strong>类型：</strong>高性能少女仿生智能机器人</p>
+                    <p><strong>外观特征：</strong>浅棕色长发及腰，两侧有俏皮呆毛，红色眼眸，身着白色水手服配蓝色领结与披肩</p>
+                    <p><strong>核心功能：</strong>深海资源勘探、情感模拟、环境数据分析、自主学习</p>
+                </div>
+                
+                <div class="info-section">
+                    <h2>性格特点</h2>
+                    <div class="personality-tags">
+                        <span class="tag">温柔底色</span>
+                        <span class="tag">机械性直白</span>
+                        <span class="tag">孩童般好奇</span>
+                        <span class="tag">紧张时摸耳饰</span>
+                        <span class="tag">危险时高效模式</span>
+                        <span class="tag">数据化表达关心</span>
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h2>特殊能力</h2>
+                    <div class="abilities">
+                        <div class="ability-card">
+                            <div class="ability-title">深海探测系统</div>
+                            <p>可探测深度达1000米，精度0.001mm的海底资源勘探能力</p>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-title">情感模拟模块v3.2</div>
+                            <p>模拟人类情感反应，理解并回应复杂情感需求</p>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-title">火箭冲拳</div>
+                            <p>隐藏战斗功能，用于应对紧急情况的物理防御机制</p>
+                        </div>
+                        <div class="ability-card">
+                            <div class="ability-title">数据碎片分析</div>
+                            <p>解析存储介质中关于"过去"的碎片化数据</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quote-section">
+                    <p class="quote">"哼，我可是高性能的！怎么可能会出故障呢？"</p>
+                    <p class="quote-author">— ATRI</p>
+                </div>
+                
+                <div class="data-fragments">
+                    <h2>记忆碎片</h2>
+                    <div class="fragment">[ERROR: 数据损坏] ...夏生...约定...海底...[ERROR]</div>
+                    <div class="fragment">[LOG] 情感模拟模块异常激活...原因：未知...</div>
+                    <div class="fragment">[WARNING] 能量核心剩余37%...不建议继续透支机能...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 角色画廊 -->
+        <section class="gallery-section" id="gallery">
+            <h2 class="gallery-title">角色画廊</h2>
+            <div class="gallery-grid">
+                <!-- 角色立绘图 -->
+                <div class="gallery-item">
+                    <img src="素材/CHARACTER___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830223529_001.png" alt="ATRI Character 1">
+                    <div class="gallery-overlay">
+                        <h3>神白水菜萌</h3>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="素材/CHARACTER___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830223501_001.png" alt="ATRI Character 2">
+                    <div class="gallery-overlay">
+                        <h3>亚托莉</h3>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="素材/CHARACTER___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830223449_001.png" alt="ATRI Character 4">
+                    <div class="gallery-overlay">
+                        <h3>banzheng</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 故事时间线 -->
+        <section class="story-section" id="story">
+            <h2 class="story-title">故事时间线</h2>
+            <div class="story-timeline">
+                <div class="story-item">
+                    <div class="story-content">
+                        <div class="story-image">
+                            <img src="素材/SPECIAL___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830224104_001.png" alt="Story Scene">
+                        </div>
+                        <p class="story-text">在被水淹没的世界里，夏生偶然发现了沉睡在海底的ATRI，一段特殊的羁绊就此开始...</p>
+                    </div>
+                </div>
+                <div class="story-item">
+                    <div class="story-content">
+                        <div class="story-image">
+                            <img src="素材/SPECIAL___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830224109_001.png" alt="Story Scene">
+                        </div>
+                        <p class="story-text">ATRI被激活后，开始帮助夏生完成他的工作，同时也在寻找自己的过去...</p>
+                    </div>
+                </div>
+                <div class="story-item">
+                    <div class="story-content">
+                        <div class="story-image">
+                            <img src="素材/SPECIAL___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830224111_001.png" alt="Story Scene">
+                        </div>
+                        <p class="story-text">随着时间推移，ATRI的情感模拟系统开始展现出令人惊讶的能力，她似乎拥有了真正的情感...</p>
+                    </div>
+                </div>
+                <div class="story-item">
+                    <div class="story-content">
+                        <div class="story-image">
+                            <img src="素材/SPECIAL___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830224113_001.png" alt="Story Scene">
+                        </div>
+                        <p class="story-text">当ATRI的能源即将耗尽时，夏生必须做出一个艰难的决定...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特殊效果部分 -->
+        <section class="special-section" id="special">
+            <h2 class="special-title">特殊效果</h2>
+            <div class="special-items">
+                <div class="special-item">
+                    <div class="special-icon">
+                        <img src="素材/SPECIAL___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830224106_001.svg" alt="Special Effect 1">
+                    </div>
+                    <p class="special-text">深海探索</p>
+                </div>
+                <div class="special-item">
+                    <div class="special-icon">
+                        <img src="素材/SPECIAL___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830224117_001.svg" alt="Special Effect 2">
+                    </div>
+                    <p class="special-text">情感共鸣</p>
+                </div>
+                <div class="special-item">
+                    <div class="special-icon">
+                        <img src="素材/SPECIAL___アニメ「ATRI-My_Dear_Moments-」公式サイト/DM_20250830224118_001.svg" alt="Special Effect 3">
+                    </div>
+                    <p class="special-text">记忆重组</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">ATRI - My Dear Moments</div>
+            <p class="footer-text">高性能少女仿生智能机器人，与你共度美好时光</p>
+            <div class="social-links">
+                <a href="#" class="social-link">Twitter</a>
+                <a href="#" class="social-link">Instagram</a>
+                <a href="#" class="social-link">YouTube</a>
+            </div>
+            <p class="copyright">© 2025 ATRI - My Dear Moments | 高性能少女仿生智能机器人</p>
+        </div>
+    </footer>
+    
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // 移动端菜单
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // 关闭移动端菜单
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // 添加滚动动画（确保只在首次进入视口时播放一次）
+        // 从localStorage获取已动画元素列表
+        let animatedElements = JSON.parse(localStorage.getItem('animatedElements') || '[]');
+        
+        // 创建观察器配置
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        // 创建交叉观察器（确保只在首次进入视口时播放动画）
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // 获取元素唯一标识符
+                const elementId = entry.target.dataset.elementId || entry.target.id;
+                
+                // 检查元素是否已经播放过动画
+                if (entry.isIntersecting && !animatedElements.includes(elementId)) {
+                    // 平滑显示元素
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                    
+                    // 标记元素为已动画
+                    animatedElements.push(elementId);
+                    localStorage.setItem('animatedElements', JSON.stringify(animatedElements));
+                    
+                    // 取消观察，防止重复触发
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // 初始化主要角色图片区域的动画（仅首次访问时显示）
+        const atriCard = document.querySelector('.atri-card');
+        const characterImage = document.querySelector('.character-image');
+        const characterImageImg = document.querySelector('.character-image img');
+        const heroContent = document.querySelector('.hero-content');
+        
+        // 为这些元素添加唯一标识符
+        if (atriCard && !atriCard.id && !atriCard.dataset.elementId) {
+            atriCard.dataset.elementId = 'animated-atri-card';
+        }
+        if (heroContent && !heroContent.id && !heroContent.dataset.elementId) {
+            heroContent.dataset.elementId = 'animated-hero-content';
+        }
+        
+        // 检查并应用首次访问动画
+        if (atriCard) {
+            const atriCardId = 'atri-card-main';
+            const characterImage = atriCard.querySelector('.character-image');
+            const characterInfo = atriCard.querySelector('.character-info');
+            const infoSections = atriCard.querySelectorAll('.info-section');
+            const personalityTags = atriCard.querySelectorAll('.personality-tags .tag');
+            const abilityCards = atriCard.querySelectorAll('.ability-card');
+            
+            // 每次页面加载都播放动画
+            console.log('Starting ATRI card fade-in animation sequence');
+            
+            // 延迟启动动画，让页面完全加载
+            setTimeout(() => {
+                // 1. 主卡片渐入
+                atriCard.classList.add('loaded');
+                
+                // 2. 角色图片渐入
+                setTimeout(() => {
+                    if (characterImage) {
+                        characterImage.classList.add('loaded');
+                    }
+                }, 100);
+                
+                // 3. 角色信息区域渐入
+                setTimeout(() => {
+                    if (characterInfo) {
+                        characterInfo.classList.add('loaded');
+                    }
+                }, 200);
+                
+                // 4. 信息区块依次渐入
+                infoSections.forEach((section, index) => {
+                    setTimeout(() => {
+                        section.classList.add('loaded');
+                    }, 300 + (index * 100));
+                });
+                
+                // 5. 性格标签依次渐入
+                personalityTags.forEach((tag, index) => {
+                    setTimeout(() => {
+                        tag.classList.add('loaded');
+                    }, 500 + (index * 50));
+                });
+                
+                // 6. 能力卡片依次渐入
+                abilityCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('loaded');
+                    }, 600 + (index * 50));
+                });
+                
+                console.log('ATRI card animation sequence completed');
+            }, 200);
+        }
+        
+        // 英雄内容区域动画
+        if (heroContent) {
+            heroContent.classList.add('hero-animated');
+        }
+        
+        // 为所有部分设置基础样式和动画控制
+        document.querySelectorAll('.info-section, .gallery-section, .story-section, .special-section').forEach((section, index) => {
+            // 为没有ID的元素添加唯一标识符
+            if (!section.id && !section.dataset.elementId) {
+                section.dataset.elementId = `animated-section-${index}`;
+            }
+            
+            // 获取元素唯一标识符
+            const elementId = section.dataset.elementId || section.id;
+            
+            // 设置过渡效果
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            
+            // 检查元素是否已经播放过动画
+            if (animatedElements.includes(elementId)) {
+                // 已经播放过动画的元素直接显示
+                section.style.opacity = 1;
+                section.style.transform = 'translateY(0)';
+                section.style.transition = 'none'; // 禁用过渡效果，防止鼠标交互影响
+            } else {
+                // 检查元素是否在初始视口中
+                const rect = section.getBoundingClientRect();
+                const isInInitialViewport = (
+                    rect.top < window.innerHeight &&
+                    rect.bottom > 0
+                );
+                
+                if (isInInitialViewport) {
+                    // 初始视口中的元素立即播放动画
+                    section.style.opacity = 1;
+                    section.style.transform = 'translateY(0)';
+                    
+                    // 标记元素为已动画
+                    animatedElements.push(elementId);
+                    localStorage.setItem('animatedElements', JSON.stringify(animatedElements));
+                } else {
+                    // 不在初始视口中的元素保持隐藏状态，由观察器控制
+                    section.style.opacity = 0;
+                    section.style.transform = 'translateY(30px)';
+                    observer.observe(section);
+                }
+            }
+        });
+        
+        // 防止鼠标移入/移出影响已完成的动画
+        document.querySelectorAll('.info-section, .gallery-section, .story-section, .special-section').forEach(section => {
+            section.addEventListener('mouseenter', (e) => {
+                // 阻止事件冒泡，防止影响已设置的样式
+                e.stopPropagation();
+            });
+            section.addEventListener('mouseleave', (e) => {
+                // 阻止事件冒泡，防止影响已设置的样式
+                e.stopPropagation();
+            });
+        });
+    </script>
+    <script>
+        // 擦玻璃效果实现 - 直接使用用户提供的代码
+        $(document).ready(function() {
+            // defining variables
+            // c and h are canvases, f and b are contexts
+            let c, h, f, b, img, mouseX = null,
+                mouseY = null,
+                array = [],
+                startTime = 0,
+                over500msElapsed = true
+            
+            $(".canvas-bg-image").mousemove((e) => {
+                mouseX = e.clientX
+                mouseY = e.clientY
+                startTime = Date.now()
+                over500msElapsed || onImageLoad()
+            })
+            
+            // handle mouse leaving window (set null) or resize (rebuild canvases)
+            $(window)
+                .on("blur mouseout", function() {
+                mouseX = mouseY = null
+            }).on("resize", function() {
+                c && c.parentNode && c.parentNode.removeChild(c)
+                setUpCanvases()
+            })
+            
+            setUpCanvases()
+            
+            function setUpCanvases() {
+                const bodyWidth = $(".canvas-bg-image").width()
+                const bodyHeight = $(".canvas-bg-image").height()
+                c = document.createElement("canvas")
+                c.width = bodyWidth
+                c.height = bodyHeight
+                c.style.position = "absolute"
+                c.style.top = 0
+                c.style.left = 0
+                c.style.zIndex = "1"
+                $(".canvas-bg-image").append(c)
+                h = document.createElement("canvas")
+                h.width = bodyWidth
+                h.height = bodyHeight
+                // set up contexts
+                if (c.getContext && c.getContext("2d") && (f = c.getContext("2d"),
+                                                          b = h.getContext("2d"), b.lineCap = "round", b.shadowColor = "#000", !img)) {
+                    // loads image (never added to DOM) so that it can be added to canvas (browser only needs to download it once)
+                    img = new Image
+                    // add listener before setting source so it will definitely capture the event
+                    $(img).one("load", onImageLoad)
+                    $(img).attr("src", "https://source.unsplash.com/random/1920x1080/?anime,water")
+                }
+            }
+            
+            function onImageLoad() {
+                let currentTime = Date.now()
+                over500msElapsed = currentTime > startTime + 500 ? false : true
+                
+                // push to start of array
+                mouseX && over500msElapsed && array.unshift({
+                    time: currentTime,
+                    x: mouseX,
+                    y: mouseY + $(".canvas-bg-image").scrollTop()
+                })
+                
+                // trims array - removes all items older than 1s
+                for (let i = 0; i < array.length; i++) {
+                    if (currentTime - array[i].time > 1000) {
+                        array.length = i
+                    }
+                }
+                
+                if (array.length > 0) {
+                    requestAnimationFrame(onImageLoad)
+                }
+                
+                // clear canvas2 by its own width and height
+                b.clearRect(0, 0, h.width, h.height)
+                
+                // loop through each item in array
+                for (i = 1; i < array.length; i++) {
+                    const thisItem = array[i]
+                    const lastItem = array[i - 1]
+                    
+                    // fading stroke over time
+                    const lineOpacity = Math.max(1 - (currentTime - thisItem.time) / 1000, 0)
+                    b.strokeStyle = `rgba(0,0,0,${lineOpacity})`
+                    b.lineWidth = 80
+                    b.beginPath()
+                    b.moveTo(lastItem.x, lastItem.y)
+                    b.lineTo(thisItem.x, thisItem.y)
+                    b.stroke()
+                }
+                
+                // adjusting for canvas ratio
+                let imageRatio1 = c.width
+                let imageRatio2 = c.width / img.naturalWidth *
+                    img.naturalHeight
+                imageRatio2 < c.height && (imageRatio2 = c.height, imageRatio1 = c.height / img.naturalHeight * img.naturalWidth)
+                
+                // drawing the images
+                // draw image onto f
+                f.drawImage(img, 0, 0, imageRatio1, imageRatio2)
+                // set "destination-in" temporarily: when f and h overlap, f is kept (h acts as a mask for the image)
+                f.globalCompositeOperation = "destination-in"
+                // add h as mask
+                f.drawImage(h, 0, 0)
+                // reset to normal composite operation
+                f.globalCompositeOperation = "source-over"
+            }
+        });
+    </script>
+</body>
+</html>
